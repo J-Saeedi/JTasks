@@ -10,17 +10,18 @@ At the bottom right, there is a field that can factor the sum of your tasks time
 
 
 ## Installation
-1. install reuquirements
-* pyqt5 library
+1. install reuquirements<br>
+pyqt5 library
 `python -m pip install pyqt5`
-2. download the program and ui file
-`git clone https://github.com/J-Saeedi/JTasks.git`
+2. download the program and ui file<br>
+`git clone https://github.com/J-Saeedi/JTasks.git`<br>
 `cd JTasks`
-3. run the program
+3. run the program<br>
 `python main.py`
 
 
 ## ToDo(es)
+- [ ] add Release for windows and linux
 - [ ] support theme
 - [ ] support cloud
 - [ ] merge and split tasks
