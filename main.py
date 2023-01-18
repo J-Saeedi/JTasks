@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QDoubleSpinBox, QSlider, QTableWidget, QTableWidgetItem, QLCDNumber
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton,\
+        QLineEdit, QDoubleSpinBox, QSlider, QTableWidget, \
+        QTableWidgetItem, QLCDNumber, QFileDialog
 
 from PyQt5 import uic
 import sys
@@ -31,6 +33,10 @@ class jtask_window(QWidget):
         self.sum_input.valueChanged.connect(self.calculate_sum)
         self.sum_output = self.findChild(QLCDNumber,"lcdNumber")
 
+        self.saveButton = self.findChild(QPushButton, "SaveButton")
+        self.saveButton.clicked.connect(self.save_to_file)
+        self.openButton = self.findChild(QPushButton, "OpenButton")
+        self.openButton.clicked.connect(self.open_from_file)
 
         self.show()
     def add_item(self):
@@ -96,6 +102,37 @@ class jtask_window(QWidget):
                 pass
         self.sum_output.display(float(sum))
 
+
+    def save_to_file(self):
+        row_counts = self.table.rowCount()
+        options = QFileDialog.Options()
+        #options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(self,"Save to File","","JCSV Files (*.j.csv)", options=options)
+        if not fileName:
+            return # exit the function
+        with open(fileName, 'w') as f:
+            for i in range(row_counts):
+                f.write(",".join([self.table.item(i,0).text(), \
+                            self.table.item(i,1).text(), \
+                            self.table.item(i,2).text()  ])+"\n")
+
+    def open_from_file(self):
+        new_row_index = self.table.rowCount()
+        options = QFileDialog.Options()
+        #options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self,"Save to File","","JCSV Files (*.j.csv)", options=options)
+        if not fileName:
+            return # exit the function
+        with open(fileName, 'r') as f:
+            for this_row in f.readlines():
+                if this_row.strip():
+                    this_data = this_row.strip().split(",")
+                    print(this_data)
+                    self.table.insertRow(new_row_index)
+                    self.table.setItem(new_row_index, 0, QTableWidgetItem(this_data[0]))
+                    self.table.setItem(new_row_index, 1, QTableWidgetItem(this_data[1]))
+                    self.table.setItem(new_row_index, 2, QTableWidgetItem(this_data[2]))
+                    new_row_index += 1
 
 app = QApplication(sys.argv)
 window = jtask_window()
